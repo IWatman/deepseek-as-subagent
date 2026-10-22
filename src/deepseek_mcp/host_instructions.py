@@ -32,24 +32,22 @@ for Flash. A background job keeps the model chosen at start; steering cannot cha
 it. `job_id` comes from `start_*`.
 
 Model routing guidance:
-- `flash`: default execution profile for well-scoped coding, review, investigation,
-  refactoring, tests, batch work, and routine multi-file tasks. Do not assume it is
-  a fixed mid-tier model: DeepSeek V4.1-Flash-1017 is competitive on some agentic
-  coding benchmarks but uneven across tasks (see the official model card:
-  https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017).
-- `pro`: escalation intent for complex debugging, architecture, difficult cross-file
-  reasoning, high-failure-cost tasks, or when Flash was insufficient. Expect a
-  capability upgrade only if the configured provider model or reasoning setting
-  makes it a meaningful upgrade.
-These are routing slots, not fixed cross-vendor equivalents such as Sonnet/Terra
-or Opus/Sol. The provider model IDs and reasoning effort are user-configurable;
-both slots may resolve to the same model, and provider aliases can be rerouted.
-DeepSeek's official notice dated 2026-09-10 said `deepseek-v4-pro` requests would
-route to V4.1-Flash until V4.1-Pro launches:
-https://www.deepseek.com/en/news/deepseek-v4-1-flash/
-Verify current provider routing before assuming the Pro slot is stronger.
-Do not select Pro merely because it is available; prefer Flash unless the task
-clearly benefits from an escalation and the configured Pro slot supports it.
+- `flash`: strong frontier coding-agent tier, roughly high-end Sonnet to Opus-
+  competitive depending on task. DeepSeek V4.1-Flash-1017 beats Opus 5 on the
+  model-card results for DeepSWE v1.1, Automation-Bench, Agents' Last Exam, and
+  Apex Bench, but trails on Terminal-Bench 4.0, ProgramBench, and NL2Repo-Bench:
+  https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017. Use it by default
+  for normal coding, review, investigation, refactoring, tests, batch work, and
+  most multi-file tasks.
+- `pro`: intended flagship difficult-task tier, roughly Opus/Sol-class. Use it for
+  complex debugging, architecture, difficult cross-file reasoning, high-failure-
+  cost changes, or when Flash has failed.
+- Routing caveat: as of 2026-10-22, DeepSeek says `deepseek-v4-pro` requests route
+  to V4.1-Flash until V4.1-Pro launches:
+  https://www.deepseek.com/en/news/deepseek-v4-1-flash/. If the configured Pro
+  slot still uses that alias, it is not a real capability upgrade.
+Prefer Flash for ordinary work; choose Pro when task difficulty or a failed Flash
+attempt justifies escalation and the configured Pro slot is actually stronger.
 
 Selection: use `delegate_*` when the host can wait for completion. Use `start_*`
 when it needs steering, status, or cancellation. Use readonly only for pure
