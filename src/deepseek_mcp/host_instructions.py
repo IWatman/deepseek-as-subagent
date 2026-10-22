@@ -32,13 +32,24 @@ for Flash. A background job keeps the model chosen at start; steering cannot cha
 it. `job_id` comes from `start_*`.
 
 Model routing guidance:
-- `flash`: default general-purpose subagent, roughly Sonnet/Terra-tier. Use it for
-  normal coding, review, investigation, refactoring, and routine multi-file work.
-- `pro`: stronger difficult-task subagent, roughly Opus/Sol-tier. Use it for complex
-  debugging, architecture, difficult multi-file reasoning, or when Flash was
-  insufficient.
+- `flash`: default execution profile for well-scoped coding, review, investigation,
+  refactoring, tests, batch work, and routine multi-file tasks. Do not assume it is
+  a fixed mid-tier model: DeepSeek V4.1-Flash-1017 is competitive on some agentic
+  coding benchmarks but uneven across tasks (see the official model card:
+  https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017).
+- `pro`: escalation intent for complex debugging, architecture, difficult cross-file
+  reasoning, high-failure-cost tasks, or when Flash was insufficient. Expect a
+  capability upgrade only if the configured provider model or reasoning setting
+  makes it a meaningful upgrade.
+These are routing slots, not fixed cross-vendor equivalents such as Sonnet/Terra
+or Opus/Sol. The provider model IDs and reasoning effort are user-configurable;
+both slots may resolve to the same model, and provider aliases can be rerouted.
+DeepSeek's official notice dated 2026-09-10 said `deepseek-v4-pro` requests would
+route to V4.1-Flash until V4.1-Pro launches:
+https://www.deepseek.com/en/news/deepseek-v4-1-flash/
+Verify current provider routing before assuming the Pro slot is stronger.
 Do not select Pro merely because it is available; prefer Flash unless the task
-clearly benefits from the stronger tier.
+clearly benefits from an escalation and the configured Pro slot supports it.
 
 Selection: use `delegate_*` when the host can wait for completion. Use `start_*`
 when it needs steering, status, or cancellation. Use readonly only for pure
