@@ -37,14 +37,12 @@ description: 默认把中等及以下、批量、重复或机械任务作为完�
 
 ## 3. 模型路由
 
-`model` 只允许 `flash` 或 `pro`；不传时使用 `flash`。两者是稳定的路由槽位，不是具体模型名，也不是跨厂商固定的能力等级；实际 provider model ID 与 reasoning effort 由用户配置决定。
+`model` 只允许 `flash` 或 `pro`；不传时使用 `flash`。
 
-- **Flash（默认执行档）**：优先处理目标清晰、验收标准明确的 coding、review、调查、重构、测试、批处理和常规多文件任务。不要预设它只是“中档模型”：DeepSeek [V4.1-Flash-1017 官方模型卡](https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017)显示，它在部分 agentic coding 基准上有旗舰竞争力，但在 Terminal-Bench、ProgramBench、NL2Repo 等项目上仍落后于表中的 Opus 5。数据由发布方报告且依赖评测 harness，不能推导出普遍的能力等价。
-- **Pro（升级意图档）**：用于复杂 debugging、架构级推理、跨文件依赖复杂、失败代价高，或 Flash 已经验证不足的任务。只有当 `pro` 实际解析到更强的 provider model，或使用了有意义的不同推理设置时，才应预期获得能力提升。
-- 不再把 Flash 固定标注为“Sonnet / Terra 档”、把 Pro 固定标注为“Opus / Sol 档”；不同任务、agent harness 和推理强度会改变相对表现。
-- **注意 provider 路由**：DeepSeek [2026-09-10 官方公告](https://www.deepseek.com/en/news/deepseek-v4-1-flash/)说明，在 V4.1-Pro 上线前，`deepseek-v4-pro` 请求会被路由到 V4.1-Flash。因此，配置项叫 `pro` 或值写着 `deepseek-v4-pro`，本身并不能证明它比 Flash 更强；上线与路由状态可能变化，应以当前供应商公告和实际配置为准。
-- 没有明确困难信号时保持 Flash；不要因为 Pro 可用就默认 Pro。
-- 主 Agent 只选择 `flash/pro`，不要尝试控制 reasoning effort；thinking 档位由用户配置决定。
+- **Flash：强前沿 coding-agent 档，默认主力。** 粗略定位为高端 Sonnet 到 Opus 竞争区间：DeepSeek [V4.1-Flash-1017 官方模型卡](https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017)中，它在 DeepSWE v1.1、Automation-Bench、Agents' Last Exam、Apex Bench 上超过 Opus 5，但在 Terminal-Bench 4.0、ProgramBench、NL2Repo-Bench 上落后。用于常规 coding、review、调查、重构、测试、批处理和大多数多文件任务。
+- **Pro：旗舰级困难任务档，目标定位约 Opus / Sol 级。** 用于复杂 debugging、架构级推理、困难跨文件任务、失败代价高的改动，或 Flash 已经失败后的升级。
+- **当前路由要点：** 截至 2026-10-22，DeepSeek 官方公告称 `deepseek-v4-pro` 会在 V4.1-Pro 上线前路由到 V4.1-Flash。若 `pro` 配置仍指向该别名，Pro 实际上不会带来能力升级；只有配置到真实更强的模型后，才按 Pro 档派工。公告：https://www.deepseek.com/en/news/deepseek-v4-1-flash/。
+- 普通任务默认 Flash；只有任务难度或 Flash 的失败记录明确要求时才选 Pro。主 Agent 只选择 `flash/pro`，不要尝试控制 reasoning effort；thinking 档位由用户配置决定。
 - background job 启动时冻结模型、reasoning effort 与能力。需要换模型时结束/取消当前 job，再新建 job。
 
 ## 4. 默认派工策略
