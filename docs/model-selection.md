@@ -5,7 +5,7 @@ The public delegation API supports exactly two stable model profiles:
 - `flash`
 - `pro`
 
-All four delegation entry points default to `model="flash"` when the argument is omitted. Use `model="pro"` only when the host decides the task needs the stronger model, for example complex debugging, architecture work, or a retry after Flash is insufficient.
+All four delegation entry points default to `model="flash"` when the argument is omitted. Treat `flash` as the default execution profile and `pro` as an escalation intent for complex debugging, architecture work, high-risk cross-file reasoning, or a retry after Flash is insufficient. These are stable routing slots, not guaranteed model tiers: the actual provider IDs and reasoning effort are user-configurable, and both slots may resolve to the same model. DeepSeek's [2026-09-10 official notice](https://www.deepseek.com/en/news/deepseek-v4-1-flash/) stated that `deepseek-v4-pro` requests would route to V4.1-Flash until V4.1-Pro launches, so a `pro` config value alone does not prove that a stronger model is being used. Check current provider routing before relying on Pro as a capability upgrade.
 
 The actual provider model IDs and reasoning effort for each slot are user-configurable in `~/.deepseek-mcp/config.json`:
 
