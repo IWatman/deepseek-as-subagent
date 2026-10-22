@@ -8,9 +8,9 @@ description: 显式派工给 DeepSeek sub-agent（绕过 Claude 自动决策）�
 `/ds` 固定调用完整 coding API；明确只做静态文件分析的任务应由主 Agent 选择
 `delegate_to_deepseek_readonly`。
 
-模型选择遵循 `delegate-to-deepseek` skill：默认不传 `model`，即使用 Flash；只有任务明显属于复杂 debugging、架构级推理、困难多文件推理，或 Flash 已明显不足时才传 `model="pro"`。Flash 约为 Sonnet/Terra 档，Pro 约为 Opus/Sol 档；这是路由参考，不是绝对等价声明。
+模型选择遵循 `delegate-to-deepseek` skill：默认不传 `model`，即使用 Flash；只有任务明显属于复杂 debugging、架构级推理、困难多文件推理，或 Flash 已明显不足时才传 `model="pro"`。
 
-`flash/pro` 只是稳定路由槽位。不要把真实 provider 模型名传进 MCP；实际模型名由用户的 `~/.deepseek-mcp/config.json` 中 `flash` / `pro` 字段决定。
+`flash/pro` 是稳定路由槽位，不是跨厂商固定的能力等级；实际模型名和推理强度由用户的 `~/.deepseek-mcp/config.json` 决定。不要再把 Flash 固定映射为 Sonnet/Terra、把 Pro 固定映射为 Opus/Sol。两个槽位可能解析到同一个模型，供应商也可能改变别名的服务端路由；只有确认配置与实际路由后，才能把 Pro 当作能力升级。详见 skill 第 3 节。
 
 ## 你要做的
 
